@@ -1,9 +1,7 @@
 public class Package {
 	String name, dependency;
+	Package dependent = null;
 
-	public String getDependency() {
-		return dependency;
-	}
 
 	public Package(String name, String dependecy) {
 		super();
@@ -15,8 +13,21 @@ public class Package {
 		return name;
 	}
 
+	public Package getDependent() {
+		return dependent;
+	}
+	
+	public void setDependent(Package dependant) {
+		this.dependent = dependant;
+	}
+	
+	public String getDependency() {
+		return dependency;
+	}
+	
 	@Override
 	public String toString() {
 		return "Name: " + this.name + " Dependency: " + this.dependency;
 	}
+
 }

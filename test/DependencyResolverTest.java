@@ -1,13 +1,18 @@
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
 public class DependencyResolverTest extends TestCase {
 
+	String testInput = "['KittenService: CamelCaser', 'CamelCaser: ']";
+	String testInput2 = "['KittenService: CamelCaser', 'CamelCaser: ', 'DogeParser: KittenService']";
+	
 	@Test
 	public void testRemoveBracketsFromInputIfPresent() throws Exception {
-		String testInput = "['KittenService: CamelCaser', 'CamelCaser: ']";
 		assertEquals("'KittenService: CamelCaser', 'CamelCaser: '", DependencyResolver.removeBrackets(testInput));
 	}
 
@@ -46,5 +51,34 @@ public class DependencyResolverTest extends TestCase {
 		}
 		
 	}
+	
+	@Test
+	public void testHashmapOfPackages() throws Exception {
+		HashMap<String, Package> packageMap = new DependencyResolver().organizeInputIntoHashmap(testInput);
+		Package kittenPackage = packageMap.get("KittenService");
+		Package camelPackage = packageMap.get("CamelCaser");
+		
+		assertEquals("KittenService", kittenPackage.getName());
+		assertEquals("CamelCaser", camelPackage.getName());
+	}
+	
+	@Test
+	public void testPackagesAreConnectedViaDependency() throws Exception {
+		DependencyResolver dr = new DependencyResolver();
+		dr.organizeInputIntoHashmap(testInput2);
+		dr.connectPackagesViaDependency();
+		
+		Package kittenPackage = dr.getPackage("KittenService");
+		Package camelPackage = dr.getPackage("CamelCaser");
+		Package dogePackage = dr.getPackage("DogeParser");
+		assertEquals(kittenPackage, camelPackage.getDependent());
+		assertEquals(dogePackage, kittenPackage.getDependent());
+		assertEquals(null, dogePackage.getDependent());
+	}
+	
+//	@Test
+//	public void testOrderPackagesBasedOnDependencies() throws Exception {
+//		assertEquals("CamelCaser, KittenService", DependencyResolver.getOrderOfInstallation(testInput));
+//	}
 
 }
