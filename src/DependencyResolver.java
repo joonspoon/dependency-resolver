@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class DependencyResolver {
 
 	public static List<String> tokenize(String input) {
@@ -17,8 +16,12 @@ public class DependencyResolver {
 		return string.trim();
 	}
 
-	public static String processInput(String input) {
-		return removeWhiteSpace(removeBrackets(input));
+	public static Package createPackage(String rawString) {
+		rawString = rawString.replaceAll("'", ""); 		// remove single quotes that surround package declaration
+		String[] packageDetails = rawString.split(":"); // package name and dependency are separated by a semi-colon
+		String packageName = packageDetails[0].trim();
+		String dependency = packageDetails[1].trim();
+		return new Package(packageName, dependency);
 	}
 
 }
