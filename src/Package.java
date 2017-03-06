@@ -15,4 +15,8 @@ public class Package {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		return "Name: " + this.name + " Dependency: " + this.dependency;
+	}
 }

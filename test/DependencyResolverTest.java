@@ -1,3 +1,4 @@
+import static org.junit.Assert.*;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -33,4 +34,17 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals("CamelCaser", secondPackage.getName());
 		assertEquals("", secondPackage.getDependency());
 	}
+	
+	@Test
+	public void testInvalidInputFailsGracefully() throws Exception {
+		
+		try {
+			Package invalidPackage = DependencyResolver.createPackage("Kitteh Kitteh");
+			fail();
+		} catch (InvalidPackageException e) {
+			assertTrue(e.getMessage().contains("Invalid"));
+		}
+		
+	}
+
 }

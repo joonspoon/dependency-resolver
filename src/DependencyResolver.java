@@ -16,7 +16,8 @@ public class DependencyResolver {
 		return string.trim();
 	}
 
-	public static Package createPackage(String rawString) {
+	public static Package createPackage(String rawString) throws InvalidPackageException {
+		if(!rawString.contains(":")) throw new InvalidPackageException("Invalid package declaration: must contain semi-colon.");
 		rawString = rawString.replaceAll("'", ""); 		// remove single quotes that surround package declaration
 		String[] packageDetails = rawString.split(":"); // package name and dependency are separated by a semi-colon
 		String packageName = packageDetails[0].trim();
