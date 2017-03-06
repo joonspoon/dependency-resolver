@@ -39,4 +39,9 @@ public class Package {
 		return "Name: " + this.name + " Dependency: " + this.dependency;
 	}
 
+	public void makeDependentInstallable() {
+		if(this.dependent != null)
+			this.dependent.canBeInstalled = true;
+	}
+
 }

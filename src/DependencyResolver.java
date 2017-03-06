@@ -5,6 +5,7 @@ import java.util.List;
 
 public class DependencyResolver {
 
+	private List<Package> installedPackages = new ArrayList<Package>();
 	private HashMap<String, Package> organizedPackages;
 
 	public static List<String> tokenize(String input) {
@@ -55,15 +56,19 @@ public class DependencyResolver {
 		return organizedPackages.get(key);
 	}
 
-	public String getOrderOfInstallation(String testInput) {
-		//List<Package> installedPackages = new ArrayList<Package>();
+	
+	public void parsePackagesForInstallability() {
 		for (Package aPackage : organizedPackages.values()) {
 			if(aPackage.canBeInstalled()){
-				//install it
-				//set it's dependents to installable
+				installedPackages.add(aPackage);
+				aPackage.makeDependentInstallable();
 			}
 		}
-		return "";
 	}
+
+	public List<Package> getInstalledPackages() {
+		return this.installedPackages;
+	}
+	
 
 }

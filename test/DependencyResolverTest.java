@@ -84,7 +84,18 @@ public class DependencyResolverTest extends TestCase {
 		DependencyResolver dr = new DependencyResolver();
 		dr.organizeInputIntoHashmap(testInput);
 		dr.connectPackagesViaDependency();
-		//assertEquals("CamelCaser, KittenService", dr.getOrderOfInstallation(testInput));
+		dr.parsePackagesForInstallability();
+		assertEquals("CamelCaser", dr.getInstalledPackages().get(0).getName());
+		assertEquals("KittenService", dr.getInstalledPackages().get(1).getName());
+		
+		DependencyResolver dr2 = new DependencyResolver();
+		dr2.organizeInputIntoHashmap("['DogeParser: KittenService', 'KittenService: CamelCaser', 'CamelCaser: ']");
+		dr2.connectPackagesViaDependency();
+		dr2.parsePackagesForInstallability();
+		dr2.parsePackagesForInstallability();
+		assertEquals("CamelCaser", dr2.getInstalledPackages().get(0).getName());
+		assertEquals("KittenService", dr2.getInstalledPackages().get(1).getName());
+		assertEquals("DogeParser", dr2.getInstalledPackages().get(2).getName());
 	}
 
 }
