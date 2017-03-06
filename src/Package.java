@@ -1,12 +1,17 @@
 public class Package {
-	String name, dependency;
-	Package dependent = null;
+	private String name, dependency;
+	private Package dependent = null;
+	private boolean canBeInstalled;
 
-
-	public Package(String name, String dependecy) {
+	public Package(String name, String dependecy, boolean canBeInstalled) {
 		super();
 		this.name = name;
 		this.dependency = dependecy;
+		this.canBeInstalled = canBeInstalled;
+	}
+
+	public Package(String name, String dependency) {
+		this(name, dependency, false);
 	}
 
 	public String getName() {
@@ -23,6 +28,10 @@ public class Package {
 	
 	public String getDependency() {
 		return dependency;
+	}
+	
+	public boolean canBeInstalled() {
+		return this.canBeInstalled;
 	}
 	
 	@Override

@@ -26,7 +26,8 @@ public class DependencyResolver {
 		String[] packageDetails = rawString.split(":"); // package name and dependency are separated by a semi-colon
 		String packageName = packageDetails[0].trim();
 		String dependency = packageDetails[1].trim();
-		return new Package(packageName, dependency);
+		boolean canBeInstalled = dependency.isEmpty();
+		return new Package(packageName, dependency, canBeInstalled);
 	}
 
 	protected HashMap<String, Package> organizeInputIntoHashmap(String input) throws InvalidPackageException {
@@ -52,6 +53,17 @@ public class DependencyResolver {
 
 	protected Package getPackage(String key) {
 		return organizedPackages.get(key);
+	}
+
+	public String getOrderOfInstallation(String testInput) {
+		//List<Package> installedPackages = new ArrayList<Package>();
+		for (Package aPackage : organizedPackages.values()) {
+			if(aPackage.canBeInstalled()){
+				//install it
+				//set it's dependents to installable
+			}
+		}
+		return "";
 	}
 
 }

@@ -27,6 +27,7 @@ public class DependencyResolverTest extends TestCase {
 	public void testPackageConstructor() throws Exception {
 		Package myPackage = new Package("Kitteh Service", "CamelCaser");
 		assertEquals("CamelCaser", myPackage.getDependency());
+		assertEquals(false, myPackage.canBeInstalled());
 	}
 
 	@Test
@@ -34,10 +35,12 @@ public class DependencyResolverTest extends TestCase {
 		Package firstPackage = DependencyResolver.createPackage("'KittenService: CamelCaser'");
 		assertEquals("KittenService", firstPackage.getName());
 		assertEquals("CamelCaser", firstPackage.getDependency());
+		assertEquals(false, firstPackage.canBeInstalled());
 
 		Package secondPackage = DependencyResolver.createPackage(" 'CamelCaser: '");
 		assertEquals("CamelCaser", secondPackage.getName());
 		assertEquals("", secondPackage.getDependency());
+		assertEquals(true, secondPackage.canBeInstalled());
 	}
 	
 	@Test
@@ -76,9 +79,12 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals(null, dogePackage.getDependent());
 	}
 	
-//	@Test
-//	public void testOrderPackagesBasedOnDependencies() throws Exception {
-//		assertEquals("CamelCaser, KittenService", DependencyResolver.getOrderOfInstallation(testInput));
-//	}
+	@Test
+	public void testOrderPackagesBasedOnDependencies() throws Exception {
+		DependencyResolver dr = new DependencyResolver();
+		dr.organizeInputIntoHashmap(testInput);
+		dr.connectPackagesViaDependency();
+		//assertEquals("CamelCaser, KittenService", dr.getOrderOfInstallation(testInput));
+	}
 
 }
