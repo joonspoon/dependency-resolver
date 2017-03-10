@@ -11,14 +11,14 @@ public class DependencyResolverTest extends TestCase {
 	
 	@Test
 	public void testRemoveBracketsFromInputIfPresent() throws Exception {
-		assertEquals("'KittenService: CamelCaser', 'CamelCaser: '", DependencyResolver.removeBrackets(testInput));
+		assertEquals("'KittenService: CamelCaser', 'CamelCaser: '", InputProcessor.removeBrackets(testInput));
 	}
 
 	@Test
 	public void testProcessInput() throws Exception {
 		String testInput = "'KittenService: CamelCaser', 'CamelCaser: '";
-		assertEquals("'KittenService: CamelCaser'", DependencyResolver.tokenize(testInput).get(0));
-		assertEquals(" 'CamelCaser: '", DependencyResolver.tokenize(testInput).get(1));
+		assertEquals("'KittenService: CamelCaser'", InputProcessor.tokenize(testInput).get(0));
+		assertEquals(" 'CamelCaser: '", InputProcessor.tokenize(testInput).get(1));
 	}
 
 	@Test
@@ -30,12 +30,12 @@ public class DependencyResolverTest extends TestCase {
 
 	@Test
 	public void testObjectificiation() throws Exception {
-		Package firstPackage = DependencyResolver.createPackage("'KittenService: CamelCaser'");
+		Package firstPackage = PackageFactory.createPackage("'KittenService: CamelCaser'");
 		assertEquals("KittenService", firstPackage.getName());
 		assertEquals("CamelCaser", firstPackage.getDependency());
 		assertEquals(false, firstPackage.canBeInstalled());
 
-		Package secondPackage = DependencyResolver.createPackage(" 'CamelCaser: '");
+		Package secondPackage = PackageFactory.createPackage(" 'CamelCaser: '");
 		assertEquals("CamelCaser", secondPackage.getName());
 		assertEquals("", secondPackage.getDependency());
 		assertEquals(true, secondPackage.canBeInstalled());
@@ -45,7 +45,7 @@ public class DependencyResolverTest extends TestCase {
 	public void testInvalidInputFailsGracefully() throws Exception {
 		
 		try {
-			Package invalidPackage = DependencyResolver.createPackage("Kitteh Kitteh");
+			Package invalidPackage = PackageFactory.createPackage("Kitteh Kitteh");
 			fail();
 		} catch (InvalidPackageException e) {
 			assertTrue(e.getMessage().contains("Invalid"));
@@ -55,7 +55,7 @@ public class DependencyResolverTest extends TestCase {
 	
 	@Test
 	public void testHashmapOfPackages() throws Exception {
-		HashMap<String, Package> packageMap = new DependencyResolver().organizeInputIntoHashmap(testInput);
+		HashMap<String, Package> packageMap = new InputProcessor(testInput).organizeInputIntoHashmap();
 		Package kittenPackage = packageMap.get("KittenService");
 		Package camelPackage = packageMap.get("CamelCaser");
 		
@@ -65,13 +65,13 @@ public class DependencyResolverTest extends TestCase {
 	
 	@Test
 	public void testPackagesAreConnectedViaDependency() throws Exception {
-		DependencyResolver dr = new DependencyResolver();
-		dr.organizeInputIntoHashmap(testInput2);
-		dr.connectPackagesViaDependency();
+		InputProcessor ip = new InputProcessor(testInput2);
+		ip.organizeInputIntoHashmap();
+		ip.connectPackagesViaDependency();
 		
-		Package kittenPackage = dr.getPackage("KittenService");
-		Package camelPackage = dr.getPackage("CamelCaser");
-		Package dogePackage = dr.getPackage("DogeParser");
+		Package kittenPackage = ip.getPackage("KittenService");
+		Package camelPackage = ip.getPackage("CamelCaser");
+		Package dogePackage = ip.getPackage("DogeParser");
 		assertEquals(kittenPackage, camelPackage.getDependent());
 		assertEquals(dogePackage, kittenPackage.getDependent());
 		assertEquals(null, dogePackage.getDependent());
@@ -80,15 +80,13 @@ public class DependencyResolverTest extends TestCase {
 	@Test
 	public void testOrderPackagesBasedOnDependencies() throws Exception {
 		DependencyResolver dr = new DependencyResolver();
-		dr.organizeInputIntoHashmap(testInput);
-		dr.connectPackagesViaDependency();
+		dr.resolve(testInput);
 		dr.parsePackagesForInstallability();
 		assertEquals("CamelCaser", dr.getInstalledPackages().get(0).getName());
 		assertEquals("KittenService", dr.getInstalledPackages().get(1).getName());
 		
 		DependencyResolver dr2 = new DependencyResolver();
-		dr2.organizeInputIntoHashmap("['DogeParser: KittenService', 'KittenService: CamelCaser', 'CamelCaser: ']");
-		dr2.connectPackagesViaDependency();
+		dr2.resolve("['DogeParser: KittenService', 'KittenService: CamelCaser', 'CamelCaser: ']");
 		dr2.parsePackagesForInstallability();
 		dr2.parsePackagesForInstallability();
 		assertEquals("CamelCaser", dr2.getInstalledPackages().get(0).getName());
