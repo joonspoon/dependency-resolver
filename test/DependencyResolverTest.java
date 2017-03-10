@@ -11,14 +11,16 @@ public class DependencyResolverTest extends TestCase {
 	
 	@Test
 	public void testRemoveBracketsFromInputIfPresent() throws Exception {
-		assertEquals("'KittenService: CamelCaser', 'CamelCaser: '", InputProcessor.removeBrackets(testInput));
+		InputProcessor ip = new InputProcessor(testInput);
+		ip.process();
+		assertEquals("'KittenService: CamelCaser', 'CamelCaser: '", ip.getInput());
 	}
 
 	@Test
 	public void testProcessInput() throws Exception {
 		String testInput = "'KittenService: CamelCaser', 'CamelCaser: '";
-		assertEquals("'KittenService: CamelCaser'", InputProcessor.tokenize(testInput).get(0));
-		assertEquals(" 'CamelCaser: '", InputProcessor.tokenize(testInput).get(1));
+		assertEquals("'KittenService: CamelCaser'", new InputProcessor(testInput).tokenizeInput().get(0));
+		assertEquals(" 'CamelCaser: '", new InputProcessor(testInput).tokenizeInput().get(1));
 	}
 
 	@Test
@@ -55,9 +57,10 @@ public class DependencyResolverTest extends TestCase {
 	
 	@Test
 	public void testHashmapOfPackages() throws Exception {
-		HashMap<String, Package> packageMap = new InputProcessor(testInput).organizeInputIntoHashmap();
-		Package kittenPackage = packageMap.get("KittenService");
-		Package camelPackage = packageMap.get("CamelCaser");
+		InputProcessor ip = new InputProcessor(testInput);
+		ip.organizeInputIntoHashmap();
+		Package kittenPackage = ip.getPackage("KittenService");
+		Package camelPackage = ip.getPackage("CamelCaser");
 		
 		assertEquals("KittenService", kittenPackage.getName());
 		assertEquals("CamelCaser", camelPackage.getName());

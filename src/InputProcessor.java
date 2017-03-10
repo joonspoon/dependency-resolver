@@ -5,7 +5,7 @@ import java.util.List;
 
 public class InputProcessor {
 
-	private HashMap<String, Package> organizedPackages;
+	private HashMap<String, Package> organizedPackages = new HashMap<String, Package>();
 	private String input;
 
 	protected InputProcessor(String input) {
@@ -18,30 +18,28 @@ public class InputProcessor {
 		return this.organizedPackages;
 	}
 
-	protected static List<String> tokenize(String input) {
+	protected List<String> tokenizeInput() {
 		return new ArrayList<String>(Arrays.asList(input.split(",")));
 	}
 
-	protected static String removeBrackets(String testInput) {
-		return testInput.replace("[", "").replace("]", "");
+	protected void removeBracketsFromInput() {
+		this.input = input.replace("[", "").replace("]", "");
 	}
 
-	protected static String removeWhiteSpace(String string) {
-		return string.trim();
+	protected String getInput() {
+		return input;
 	}
 
-	protected HashMap<String, Package> organizeInputIntoHashmap() throws InvalidPackageException {
-		organizedPackages = new HashMap<String, Package>();
+	protected void organizeInputIntoHashmap() throws InvalidPackageException {
 
-		input = InputProcessor.removeBrackets(input);
-		List<String> rawPackages = InputProcessor.tokenize(input);
+		removeBracketsFromInput();
+		List<String> rawPackages = tokenizeInput();
 
 		for (String string : rawPackages) {
 			Package aPackage = PackageFactory.createPackage(string);
-			organizedPackages.put(aPackage.getName(), aPackage);
+			this.organizedPackages.put(aPackage.getName(), aPackage);
 		}
 
-		return organizedPackages;
 	}
 
 	protected void connectPackagesViaDependency() {
