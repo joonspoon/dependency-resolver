@@ -1,5 +1,3 @@
-import static org.junit.Assert.*;
-
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -96,6 +94,13 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals("CamelCaser", dr2.getInstalledPackages().get(0).getName());
 		assertEquals("KittenService", dr2.getInstalledPackages().get(1).getName());
 		assertEquals("DogeParser", dr2.getInstalledPackages().get(2).getName());
+	}
+	
+	@Test
+	public void testGetInstallationOrderInSpecifiedFormat() throws Exception {
+		DependencyResolver dr = new DependencyResolver();
+		dr.resolve(this.testInput);
+		assertEquals("'CamelCaser, KittenService'", dr.getInstallationOrder());
 	}
 
 }

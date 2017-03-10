@@ -36,7 +36,8 @@ public class Package {
 	
 	@Override
 	public String toString() {
-		return "Name: " + this.name + " Dependency: " + this.dependency;
+		String dependencyIfExists = this.dependency.isEmpty() ? "" : " depends on " + this.dependency;
+		return this.name + dependencyIfExists;
 	}
 
 	public void makeDependentInstallable() {
