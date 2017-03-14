@@ -8,11 +8,11 @@ public class InputProcessor {
 	private HashMap<String, Package> organizedPackages = new HashMap<String, Package>();
 	private String input;
 
-	protected InputProcessor(String input) {
+	public InputProcessor(String input) {
 		this.input = input;
 	}
 
-	protected HashMap<String, Package> process() throws InvalidPackageException {
+	public HashMap<String, Package> process() throws InvalidPackageException {
 		organizeInputIntoHashmap();
 		connectPackagesViaDependency();
 		return this.organizedPackages;

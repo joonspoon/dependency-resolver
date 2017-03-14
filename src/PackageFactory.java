@@ -1,7 +1,7 @@
 
 public class PackageFactory {
 
-	protected static Package createPackage(String rawString) throws InvalidPackageException {
+	public static Package createPackage(String rawString) throws InvalidPackageException {
 		if (!rawString.contains(":"))
 			throw new InvalidPackageException("Invalid package declaration: must contain semi-colon.");
 		rawString = rawString.replaceAll("'", ""); 		// remove single quotes that surround package declaration
