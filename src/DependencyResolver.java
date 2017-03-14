@@ -9,11 +9,15 @@ public class DependencyResolver {
 	
 	protected void parsePackagesForInstallability() {
 		for (Package aPackage : organizedPackages.values()) {
-			if (aPackage.canBeInstalled()) {
+			if (aPackage.canBeInstalled() && isNotAlreadyInstalled(aPackage)) {
 				installedPackages.add(aPackage);
 				aPackage.makeDependentInstallable();
 			}
 		}
+	}
+
+	private boolean isNotAlreadyInstalled(Package aPackage) {
+		return !installedPackages.contains(aPackage);
 	}
 
 	protected List<Package> getInstalledPackages() {

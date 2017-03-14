@@ -1,3 +1,5 @@
+import static org.junit.Assert.*;
+
 import java.util.HashMap;
 
 import junit.framework.TestCase;
@@ -87,21 +89,35 @@ public class DependencyResolverTest extends TestCase {
 		dr.parsePackagesForInstallability();
 		assertEquals("CamelCaser", dr.getInstalledPackages().get(0).getName());
 		assertEquals("KittenService", dr.getInstalledPackages().get(1).getName());
-		
-		DependencyResolver dr2 = new DependencyResolver();
-		dr2.resolve("['DogeParser: KittenService', 'KittenService: CamelCaser', 'CamelCaser: ']");
-		dr2.parsePackagesForInstallability();
-		dr2.parsePackagesForInstallability();
-		assertEquals("CamelCaser", dr2.getInstalledPackages().get(0).getName());
-		assertEquals("KittenService", dr2.getInstalledPackages().get(1).getName());
-		assertEquals("DogeParser", dr2.getInstalledPackages().get(2).getName());
+	}
+	
+	@Test
+	public void testInstallationOrderForExampleWithTwoConnections() throws Exception {
+		DependencyResolver dependencyResolver = new DependencyResolver();
+		dependencyResolver.resolve(testInput2);
+		dependencyResolver.parsePackagesForInstallability();
+		assertEquals("CamelCaser", dependencyResolver.getInstalledPackages().get(0).getName());
+		assertEquals("KittenService", dependencyResolver.getInstalledPackages().get(1).getName());
+		assertEquals("DogeParser", dependencyResolver.getInstalledPackages().get(2).getName());
+	}
+	
+	@Test
+	public void testInstallationOrderForExampleWithThreeConnections() throws Exception {
+		DependencyResolver dependencyResolver = new DependencyResolver();
+		dependencyResolver.resolve("['KittenService: CamelCaser', 'CamelCaser: ', 'DogeParser: KittenService', 'DuckProvider: DogeParser']");
+		dependencyResolver.parsePackagesForInstallability();
+		assertEquals("CamelCaser", dependencyResolver.getInstalledPackages().get(0).getName());
+		assertEquals("KittenService", dependencyResolver.getInstalledPackages().get(1).getName());
+		assertEquals("DogeParser", dependencyResolver.getInstalledPackages().get(2).getName());
+		assertEquals("DuckProvider", dependencyResolver.getInstalledPackages().get(3).getName());
 	}
 	
 	@Test
 	public void testGetInstallationOrderInSpecifiedFormat() throws Exception {
-		DependencyResolver dr = new DependencyResolver();
-		dr.resolve(this.testInput);
-		assertEquals("'CamelCaser, KittenService'", dr.getInstallationOrder());
+		DependencyResolver dependencyResolver = new DependencyResolver();
+		dependencyResolver.resolve(testInput);
+		dependencyResolver.parsePackagesForInstallability();
+		assertEquals("'CamelCaser, KittenService'", dependencyResolver.getInstallationOrder());
 	}
 
 }
