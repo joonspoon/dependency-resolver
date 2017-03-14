@@ -47,12 +47,16 @@ public class DependencyResolver {
 		return packageList.toString();
 	}
 
-	public void resolve(String input) throws InvalidPackageException {
+	public void resolve(String input) throws InvalidPackageException, CyclicDependencyException {
 		InputProcessor inputProcessor = new InputProcessor(input);
 		this.organizedPackages = inputProcessor.process();
 		
 		parsePackagesForInstallability();
 		parsePackagesForInstallability(); 
+		
+		/* If all the packages could not be installed, there must be a cyclic dependency. */
+		if(installedPackages.size() < organizedPackages.size())	
+			throw new CyclicDependencyException();
 	}
 
 }

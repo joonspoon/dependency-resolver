@@ -6,11 +6,13 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.sun.scenario.effect.impl.state.LinearConvolveRenderState.PassType;
+
 public class DependencyResolverTest extends TestCase {
 
 	String testInput = "['KittenService: CamelCaser', 'CamelCaser: ']";
 	String testInput2 = "['KittenService: CamelCaser', 'CamelCaser: ', 'DogeParser: KittenService']";
-	
+
 	@Test
 	public void testRemoveBracketsFromInputIfPresent() throws Exception {
 		InputProcessor ip = new InputProcessor(testInput);
@@ -44,36 +46,36 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals("", secondPackage.getDependency());
 		assertEquals(true, secondPackage.canBeInstalled());
 	}
-	
+
 	@Test
 	public void testInvalidInputFailsGracefully() throws Exception {
-		
+
 		try {
 			Package invalidPackage = PackageFactory.createPackage("Kitteh Kitteh");
 			fail();
 		} catch (InvalidPackageException e) {
 			assertTrue(e.getMessage().contains("Invalid"));
 		}
-		
+
 	}
-	
+
 	@Test
 	public void testHashmapOfPackages() throws Exception {
 		InputProcessor ip = new InputProcessor(testInput);
 		ip.organizeInputIntoHashmap();
 		Package kittenPackage = ip.getPackage("KittenService");
 		Package camelPackage = ip.getPackage("CamelCaser");
-		
+
 		assertEquals("KittenService", kittenPackage.getName());
 		assertEquals("CamelCaser", camelPackage.getName());
 	}
-	
+
 	@Test
 	public void testPackagesAreConnectedViaDependency() throws Exception {
 		InputProcessor ip = new InputProcessor(testInput2);
 		ip.organizeInputIntoHashmap();
 		ip.connectPackagesViaDependency();
-		
+
 		Package kittenPackage = ip.getPackage("KittenService");
 		Package camelPackage = ip.getPackage("CamelCaser");
 		Package dogePackage = ip.getPackage("DogeParser");
@@ -81,7 +83,7 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals(dogePackage, kittenPackage.getDependent());
 		assertEquals(null, dogePackage.getDependent());
 	}
-	
+
 	@Test
 	public void testOrderPackagesBasedOnDependencies() throws Exception {
 		DependencyResolver dr = new DependencyResolver();
@@ -89,7 +91,7 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals("CamelCaser", dr.getInstalledPackages().get(0).getName());
 		assertEquals("KittenService", dr.getInstalledPackages().get(1).getName());
 	}
-	
+
 	@Test
 	public void testInstallationOrderForExampleWithTwoConnections() throws Exception {
 		DependencyResolver dependencyResolver = new DependencyResolver();
@@ -98,7 +100,7 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals("KittenService", dependencyResolver.getInstalledPackages().get(1).getName());
 		assertEquals("DogeParser", dependencyResolver.getInstalledPackages().get(2).getName());
 	}
-	
+
 	@Test
 	public void testInstallationOrderForExampleWithThreeConnections() throws Exception {
 		DependencyResolver dependencyResolver = new DependencyResolver();
@@ -108,20 +110,32 @@ public class DependencyResolverTest extends TestCase {
 		assertEquals("DogeParser", dependencyResolver.getInstalledPackages().get(2).getName());
 		assertEquals("DuckProvider", dependencyResolver.getInstalledPackages().get(3).getName());
 	}
-	
+
 	@Test
 	public void testGetInstallationOrderInSpecifiedFormat() throws Exception {
 		DependencyResolver dependencyResolver = new DependencyResolver();
 		dependencyResolver.resolve(testInput);
 		assertEquals("'CamelCaser, KittenService'", dependencyResolver.getInstallationOrder());
 	}
-	
+
 	@Test
 	public void testInstallationOrderForMoreComplexExample() throws Exception {
 		String testInput = "['KittenService: ','Leetmeme: Cyberportal','Cyberportal: Ice','CamelCaser: KittenService','Fraudstream: Leetmeme','Ice: ']";
 		DependencyResolver dependencyResolver = new DependencyResolver();
 		dependencyResolver.resolve(testInput);
 		assertEquals("'Ice, KittenService, Cyberportal, Leetmeme, CamelCaser, Fraudstream'", dependencyResolver.getInstallationOrder());
+	}
+
+	@Test
+	public void testCyclicDependencyThrowsException() throws Exception {
+		String testInput = "['KittenService: ','Leetmeme: Cyberportal','Cyberportal: Ice','CamelCaser: KittenService','Fraudstream: ','Ice: Leetmeme']";
+		DependencyResolver dependencyResolver = new DependencyResolver();
+		try {
+			dependencyResolver.resolve(testInput);
+			fail();
+		} catch (CyclicDependencyException cde) {
+			assertTrue(true);
+		}
 	}
 
 }
