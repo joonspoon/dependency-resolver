@@ -9,7 +9,7 @@ public class UserInterfaceForDependencyResolver {
 			depResolver.resolve(input);
 			JOptionPane.showMessageDialog(null, "Got these packages... \n\n" + depResolver.getOriginalPackageList());
 			JOptionPane.showMessageDialog(null, "Order of installation should be... \n\n" + depResolver.getInstallationOrder());
-		} catch (InvalidPackageException e) {
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
 					e.getMessage(),
 				    "Input error",

@@ -56,7 +56,7 @@ public class DependencyResolver {
 		
 		/* If all the packages could not be installed, there must be a cyclic dependency. */
 		if(installedPackages.size() < organizedPackages.size())	
-			throw new CyclicDependencyException();
+			throw new CyclicDependencyException("Unable to resolve packages due to cyclic dependency.");
 	}
 
 }

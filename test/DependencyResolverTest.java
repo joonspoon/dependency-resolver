@@ -1,12 +1,6 @@
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
-
-import com.sun.scenario.effect.impl.state.LinearConvolveRenderState.PassType;
 
 public class DependencyResolverTest extends TestCase {
 
