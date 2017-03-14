@@ -86,7 +86,6 @@ public class DependencyResolverTest extends TestCase {
 	public void testOrderPackagesBasedOnDependencies() throws Exception {
 		DependencyResolver dr = new DependencyResolver();
 		dr.resolve(testInput);
-		dr.parsePackagesForInstallability();
 		assertEquals("CamelCaser", dr.getInstalledPackages().get(0).getName());
 		assertEquals("KittenService", dr.getInstalledPackages().get(1).getName());
 	}
@@ -95,7 +94,6 @@ public class DependencyResolverTest extends TestCase {
 	public void testInstallationOrderForExampleWithTwoConnections() throws Exception {
 		DependencyResolver dependencyResolver = new DependencyResolver();
 		dependencyResolver.resolve(testInput2);
-		dependencyResolver.parsePackagesForInstallability();
 		assertEquals("CamelCaser", dependencyResolver.getInstalledPackages().get(0).getName());
 		assertEquals("KittenService", dependencyResolver.getInstalledPackages().get(1).getName());
 		assertEquals("DogeParser", dependencyResolver.getInstalledPackages().get(2).getName());
@@ -105,7 +103,6 @@ public class DependencyResolverTest extends TestCase {
 	public void testInstallationOrderForExampleWithThreeConnections() throws Exception {
 		DependencyResolver dependencyResolver = new DependencyResolver();
 		dependencyResolver.resolve("['KittenService: CamelCaser', 'CamelCaser: ', 'DogeParser: KittenService', 'DuckProvider: DogeParser']");
-		dependencyResolver.parsePackagesForInstallability();
 		assertEquals("CamelCaser", dependencyResolver.getInstalledPackages().get(0).getName());
 		assertEquals("KittenService", dependencyResolver.getInstalledPackages().get(1).getName());
 		assertEquals("DogeParser", dependencyResolver.getInstalledPackages().get(2).getName());
@@ -116,8 +113,15 @@ public class DependencyResolverTest extends TestCase {
 	public void testGetInstallationOrderInSpecifiedFormat() throws Exception {
 		DependencyResolver dependencyResolver = new DependencyResolver();
 		dependencyResolver.resolve(testInput);
-		dependencyResolver.parsePackagesForInstallability();
 		assertEquals("'CamelCaser, KittenService'", dependencyResolver.getInstallationOrder());
+	}
+	
+	@Test
+	public void testInstallationOrderForMoreComplexExample() throws Exception {
+		String testInput = "['KittenService: ','Leetmeme: Cyberportal','Cyberportal: Ice','CamelCaser: KittenService','Fraudstream: Leetmeme','Ice: ']";
+		DependencyResolver dependencyResolver = new DependencyResolver();
+		dependencyResolver.resolve(testInput);
+		assertEquals("'Ice, KittenService, Cyberportal, Leetmeme, CamelCaser, Fraudstream'", dependencyResolver.getInstallationOrder());
 	}
 
 }

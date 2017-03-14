@@ -52,6 +52,7 @@ public class DependencyResolver {
 		this.organizedPackages = inputProcessor.process();
 		
 		parsePackagesForInstallability();
+		parsePackagesForInstallability(); 
 	}
 
 }
