@@ -132,12 +132,12 @@ public class DependencyResolverTest extends TestCase {
 		}
 	}
 	
-//	@Test
-//	public void testInstallationOrderWhenPackageHasMultipleDependents() throws Exception {
-//		String testInput = "['F: B', 'A: G', 'E: A', 'B: C', 'D:' , 'C: D', 'G: D']";
-//		DependencyResolver dependencyResolver = new DependencyResolver();
-//		dependencyResolver.resolve(testInput);
-//		assertEquals("'D, C, B, F, G, A, E'", dependencyResolver.getInstallationOrder());
-//	}
+	@Test
+	public void testInstallationOrderWhenPackageHasMultipleDependents() throws Exception {
+		String testInput = "['F: B', 'A: G', 'E: A', 'B: C', 'D:' , 'C: D', 'G: D']";
+		DependencyResolver dependencyResolver = new DependencyResolver();
+		dependencyResolver.resolve(testInput);
+		assertEquals("'D, G, A, C, E, B, F'", dependencyResolver.getInstallationOrder());
+	}
 
 }

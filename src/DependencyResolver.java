@@ -53,6 +53,7 @@ public class DependencyResolver {
 		
 		parsePackagesForInstallability();
 		parsePackagesForInstallability(); 
+		parsePackagesForInstallability(); 
 		
 		/* If all the packages could not be installed, there must be a cyclic dependency. */
 		if(installedPackages.size() < organizedPackages.size())	

@@ -24,19 +24,19 @@ public class Package {
 	public List<Package> getDependents() {
 		return dependents;
 	}
-	
+
 	public void addDependent(Package newDependent) {
 		this.dependents.add(newDependent);
 	}
-	
+
 	public String getDependency() {
 		return dependendsOn;
 	}
-	
+
 	public boolean canBeInstalled() {
 		return this.canBeInstalled;
 	}
-	
+
 	@Override
 	public String toString() {
 		String dependencyIfExists = this.dependendsOn.isEmpty() ? "" : " depends on " + this.dependendsOn;
@@ -44,10 +44,9 @@ public class Package {
 	}
 
 	public void makeDependentsInstallable() {
-		//TODO: make this work for multiple dependents
-		
-		if(this.dependents.size() > 0 && this.dependents.get(0) != null)
-			this.dependents.get(0).canBeInstalled = true;
+		for (Package dependentPackage : dependents) {
+			dependentPackage.canBeInstalled = true;
+		}
 	}
 
 }
