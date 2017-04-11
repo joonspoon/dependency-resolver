@@ -1,6 +1,6 @@
-import junit.framework.TestCase;
-
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class DependencyResolverTest extends TestCase {
 
@@ -73,9 +73,9 @@ public class DependencyResolverTest extends TestCase {
 		Package kittenPackage = ip.getPackage("KittenService");
 		Package camelPackage = ip.getPackage("CamelCaser");
 		Package dogePackage = ip.getPackage("DogeParser");
-		assertEquals(kittenPackage, camelPackage.getDependent());
-		assertEquals(dogePackage, kittenPackage.getDependent());
-		assertEquals(null, dogePackage.getDependent());
+		assertEquals(kittenPackage, camelPackage.getDependents().get(0));
+		assertEquals(dogePackage, kittenPackage.getDependents().get(0));
+		assertEquals(0, dogePackage.getDependents().size());
 	}
 
 	@Test
@@ -131,5 +131,13 @@ public class DependencyResolverTest extends TestCase {
 			assertTrue(true);
 		}
 	}
+	
+//	@Test
+//	public void testInstallationOrderWhenPackageHasMultipleDependents() throws Exception {
+//		String testInput = "['F: B', 'A: G', 'E: A', 'B: C', 'D:' , 'C: D', 'G: D']";
+//		DependencyResolver dependencyResolver = new DependencyResolver();
+//		dependencyResolver.resolve(testInput);
+//		assertEquals("'D, C, B, F, G, A, E'", dependencyResolver.getInstallationOrder());
+//	}
 
 }

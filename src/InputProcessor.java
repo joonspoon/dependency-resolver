@@ -45,7 +45,7 @@ public class InputProcessor {
 	protected void connectPackagesViaDependency() {
 		for (Package aPackage : organizedPackages.values()) {
 			if (!aPackage.getDependency().isEmpty())
-				organizedPackages.get(aPackage.getDependency()).setDependent(aPackage);
+				organizedPackages.get(aPackage.getDependency()).addDependent(aPackage);
 		}
 	}
 

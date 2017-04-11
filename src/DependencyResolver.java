@@ -11,7 +11,7 @@ public class DependencyResolver {
 		for (Package aPackage : organizedPackages.values()) {
 			if (aPackage.canBeInstalled() && isNotAlreadyInstalled(aPackage)) {
 				installedPackages.add(aPackage);
-				aPackage.makeDependentInstallable();
+				aPackage.makeDependentsInstallable();
 			}
 		}
 	}

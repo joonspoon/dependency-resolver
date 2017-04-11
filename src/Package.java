@@ -1,12 +1,15 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Package {
-	private String name, dependency;
-	private Package dependent = null;
+	private String name, dependendsOn;
+	private List<Package> dependents = new ArrayList<Package>();
 	private boolean canBeInstalled;
 
 	public Package(String name, String dependecy, boolean canBeInstalled) {
 		super();
 		this.name = name;
-		this.dependency = dependecy;
+		this.dependendsOn = dependecy;
 		this.canBeInstalled = canBeInstalled;
 	}
 
@@ -18,16 +21,16 @@ public class Package {
 		return name;
 	}
 
-	public Package getDependent() {
-		return dependent;
+	public List<Package> getDependents() {
+		return dependents;
 	}
 	
-	public void setDependent(Package dependant) {
-		this.dependent = dependant;
+	public void addDependent(Package newDependent) {
+		this.dependents.add(newDependent);
 	}
 	
 	public String getDependency() {
-		return dependency;
+		return dependendsOn;
 	}
 	
 	public boolean canBeInstalled() {
@@ -36,13 +39,15 @@ public class Package {
 	
 	@Override
 	public String toString() {
-		String dependencyIfExists = this.dependency.isEmpty() ? "" : " depends on " + this.dependency;
+		String dependencyIfExists = this.dependendsOn.isEmpty() ? "" : " depends on " + this.dependendsOn;
 		return this.name + dependencyIfExists;
 	}
 
-	public void makeDependentInstallable() {
-		if(this.dependent != null)
-			this.dependent.canBeInstalled = true;
+	public void makeDependentsInstallable() {
+		//TODO: make this work for multiple dependents
+		
+		if(this.dependents.size() > 0 && this.dependents.get(0) != null)
+			this.dependents.get(0).canBeInstalled = true;
 	}
 
 }
