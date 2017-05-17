@@ -51,9 +51,11 @@ public class DependencyResolver {
 		InputProcessor inputProcessor = new InputProcessor(input);
 		this.organizedPackages = inputProcessor.process();
 		
-		parsePackagesForInstallability();
-		parsePackagesForInstallability(); 
-		parsePackagesForInstallability(); 
+		int numberOfNodesToParse = organizedPackages.size();
+		System.out.println(numberOfNodesToParse);
+		for (int i = 0; i < numberOfNodesToParse; i++) {
+			parsePackagesForInstallability();
+		}
 		
 		/* If all the packages could not be installed, there must be a cyclic dependency. */
 		if(installedPackages.size() < organizedPackages.size())	

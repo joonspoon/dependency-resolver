@@ -139,5 +139,13 @@ public class DependencyResolverTest extends TestCase {
 		dependencyResolver.resolve(testInput);
 		assertEquals("'D, G, A, C, E, B, F'", dependencyResolver.getInstallationOrder());
 	}
+	
+	@Test
+	public void testVariableNumberOfNodes() throws Exception {
+		String testInput = "['E: F, F: G, G: , A: B, B: C, C: D, D:E, E:F, F:G, G: ']";
+		DependencyResolver dependencyResolver = new DependencyResolver();
+		dependencyResolver.resolve(testInput);
+		assertEquals("'G, F, E, D, C, B, A'", dependencyResolver.getInstallationOrder());
+	}
 
 }
